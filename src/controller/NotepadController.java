@@ -42,6 +42,7 @@ public class NotepadController implements Initializable {
             }
         }
     }
+    // new comment
 
     public String getTodaysDate() {
         return new SimpleDateFormat("dd.MM.yyyy EEEE").format(new Date());
