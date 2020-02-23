@@ -40,12 +40,10 @@ public class NotepadController implements Initializable {
     public void setText(String text) throws IOException {
         addDateToList();
         saveToFile();
-        System.out.println("click on: " + listView.getSelectionModel().getSelectedItem());
-
     }
 
 
-    private void loadFromFile() {
+    private void loadFromFile() throws IOException {
         FileReader fr = null;
         try {
             fr = new FileReader(FILEPATH + currentFile);
@@ -56,15 +54,18 @@ public class NotepadController implements Initializable {
                 while ((line = br.readLine()) != null) {
                     sb.append(line + "\n");
                 }
-//                sb.delete(sb.length() -1, sb.length());
 
-                System.out.println("setting this to textarea: " + sb.toString());
+                System.out.println("Loading file: " + currentFile);
                 textArea.setText(sb.toString());
             } catch (Exception ex) {
-                System.out.println("error loading file");
+                System.out.println("Error loading file");
             }
         } catch (FileNotFoundException e) {
-            System.out.println("nothing to load...");
+            System.out.println("Nothing to load...");
+        } finally {
+            if (fr != null) {
+                fr.close();
+            }
         }
     }
 
@@ -83,14 +84,9 @@ public class NotepadController implements Initializable {
     }
 
     private void addDateToList() {
-        if (listView.getItems().isEmpty()) {
-            listView.getItems().add(getTodaysDate());
-        } else {
-            if (!listView.getItems().get(0).equals(getTodaysDate())) {
-                System.out.println("todays date: " + getTodaysDate());
-                listView.getItems().add(0, getTodaysDate());
-            }
-        }
+        listView.getItems().add(0, getTodaysDate());
+        currentFile = getLatestFile();
+        System.out.println("Creating file " + currentFile);
     }
 
     public String getTodaysDate() {
@@ -142,7 +138,6 @@ public class NotepadController implements Initializable {
             }
         });
 
-
     }
 
     public boolean isLatest(String item) {
@@ -157,21 +152,30 @@ public class NotepadController implements Initializable {
         }
     }
 
+
     public void initialize(URL location, ResourceBundle resources) {
 /**
  * TODO: some stuff to do
  */
 
-
         // load all the history into sidebar
         loadAllFiles(FILEPATH);
 
-        // set current file as the latest one
-        currentFile = getLatestFile();
+        if (listView.getItems().isEmpty() || !getLatestFile().equals(getTodaysDate())) {
+            addDateToList();
+        } else {
 
-        // if file was already created today
-        if (getLatestFile().equals(getTodaysDate())) {
-            loadFromFile();
+            // set current file as the latest one
+            currentFile = getLatestFile();
+
+            // load file if it was already created today
+            if (getLatestFile().equals(getTodaysDate())) {
+                try {
+                    loadFromFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
 
         // just a little prompt

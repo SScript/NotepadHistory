@@ -17,7 +17,6 @@ public class NotepadModel {
 
     public void addText(String text) throws IOException {
         System.out.println("adding text: " + text);
-
         notepadController.setText(text);
     }
 

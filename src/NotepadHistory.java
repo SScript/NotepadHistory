@@ -38,7 +38,6 @@ public class NotepadHistory extends Application {
     public void stop() throws IOException {
         NotepadController nc = loader.getController();
         nc.saveToFile();
-        System.out.println("App is closing, saving to " + nc.currentFile);
     }
 
     public static void main(String[] args) {
