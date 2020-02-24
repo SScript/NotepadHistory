@@ -15,6 +15,7 @@ import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.logging.Logger;
 
 /**
  * TODO: finish all
@@ -91,7 +92,9 @@ public class NotepadController implements Initializable {
 
     public String getTodaysDate() {
         return new SimpleDateFormat("dd.MM.yyyy EEEE").format(new Date());
+//        Logger.getLogger()
     }
+
 
     public void loadAllFiles(String path) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy EEEE");
